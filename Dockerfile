@@ -32,7 +32,7 @@ RUN dpkg --add-architecture i386 && \
     ruby --version && \
     gem install rubygems-update && \
     gem install psych && \
-    gem update psych && \
+    gem update psych && \z
     gem install bundler -v '~>1' && \
     gem install fastlane && \
     curl -fL https://github.com/docker/compose/releases/download/1.6.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
@@ -50,44 +50,8 @@ RUN dpkg --add-architecture i386 && \
     yes | sdkmanager \
     "platforms;android-29" \
     "platforms;android-28" \
-    "platforms;android-27" \
-    "platforms;android-26" \
-    "platforms;android-25" \
-    "platforms;android-24" \
-    "platforms;android-23" \
-    "platforms;android-22" \
-    "platforms;android-21" \
-    "platforms;android-19" \
-    "platforms;android-17" \
-    "platforms;android-15" \
     "build-tools;29.0.3" \
-    "build-tools;29.0.2" \
-    "build-tools;29.0.1" \
-    "build-tools;29.0.0" \
     "build-tools;28.0.3" \
-    "build-tools;28.0.2" \
-    "build-tools;28.0.1" \
-    "build-tools;28.0.0" \
-    "build-tools;27.0.3" \
-    "build-tools;27.0.2" \
-    "build-tools;27.0.1" \
-    "build-tools;27.0.0" \
-    "build-tools;26.0.2" \
-    "build-tools;26.0.1" \
-    "build-tools;25.0.3" \
-    "build-tools;24.0.3" \
-    "build-tools;23.0.3" \
-    "build-tools;22.0.1" \
-    "build-tools;21.1.2" \
-    "build-tools;19.1.0" \
-    "build-tools;17.0.0" \
-    "system-images;android-29;google_apis;x86" \
-    "system-images;android-28;google_apis;x86_64" \
-    "system-images;android-26;google_apis;x86" \
-    "system-images;android-25;google_apis;armeabi-v7a" \
-    "system-images;android-24;default;armeabi-v7a" \
-    "system-images;android-22;default;armeabi-v7a" \
-    "system-images;android-19;default;armeabi-v7a" \
     "extras;android;m2repository" \
     "extras;google;m2repository" \
     "extras;google;google_play_services" \
@@ -96,11 +60,6 @@ RUN dpkg --add-architecture i386 && \
     "add-ons;addon-google_apis-google-23" \
     "add-ons;addon-google_apis-google-22" \
     "add-ons;addon-google_apis-google-21" && \
-    wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip -P /tmp  && \
-    unzip -d /opt/gradle /tmp/gradle-*.zip && \
-    chmod +775 /opt/gradle && \
-    gradle --version && \
-    rm -rf /tmp/gradle* && \
     fastlane --version && \
     /usr/bin/gcloud config set --installation component_manager/disable_update_check true && \
     sed -i -- 's/\"disable_updater\": false/\"disable_updater\": true/g' $GCLOUD_SDK_CONFIG && \
