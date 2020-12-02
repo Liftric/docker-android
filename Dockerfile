@@ -32,7 +32,7 @@ RUN dpkg --add-architecture i386 && \
     ruby --version && \
     gem install rubygems-update && \
     gem install psych && \
-    gem update psych && \z
+    gem update psych && \
     gem install bundler -v '~>1' && \
     gem install fastlane && \
     curl -fL https://github.com/docker/compose/releases/download/1.6.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
@@ -48,8 +48,11 @@ RUN dpkg --add-architecture i386 && \
     sdkmanager "emulator" "tools" "platform-tools" && \
     yes | sdkmanager --update --channel=3 && \
     yes | sdkmanager \
+    "platforms;android-30" \
     "platforms;android-29" \
     "platforms;android-28" \
+    "build-tools;30.0.2" \
+    "build-tools;30.0.0" \
     "build-tools;29.0.3" \
     "build-tools;28.0.3" \
     "extras;android;m2repository" \
