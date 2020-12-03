@@ -14,13 +14,10 @@ RUN dpkg --add-architecture i386 && \
     apt-get -y install wget apt-transport-https software-properties-common curl gnupg gpg-agent snapd --no-install-recommends && \
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
-#    add-apt-repository ppa:rpardini/adoptopenjdk && \
     wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add - && \
     echo "deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/adoptopenjdk.list && \
     mkdir -p /usr/share/man/man1 && \
-#    apt-add-repository ppa:brightbox/ruby-ng && \
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && \
-#    echo "deb https://packages.cloud.google.com/apt cloud-sdk-`lsb_release -c -s` main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
     echo "deb https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
     curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
