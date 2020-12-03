@@ -1,9 +1,9 @@
-FROM ubuntu:14.04
+FROM ubuntu:20.04
 
 ENV ANDROID_HOME /opt/android-sdk-linux
 ENV PATH ${PATH}:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools
-ENV GRADLE_VERSION=6.3
-ENV PATH=$PATH:"/opt/gradle/gradle-6.3/bin/"
+ENV GRADLE_VERSION=6.7.1
+ENV PATH=$PATH:"/opt/gradle/gradle-6.7.1/bin/"
 ENV GCLOUD_SDK_CONFIG /usr/lib/google-cloud-sdk/lib/googlecloudsdk/core/config.json
 ENV QT_QPA_PLATFORM offscreen
 ENV LD_LIBRARY_PATH ${ANDROID_HOME}/tools/lib64:${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib
@@ -11,31 +11,42 @@ ENV APKINFO_TOOLS /opt/apktools
 
 RUN dpkg --add-architecture i386 && \
     apt-get update -qq && \
-    apt-get -y install wget apt-transport-https software-properties-common curl --no-install-recommends && \
-    curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+    apt-get -y install wget apt-transport-https software-properties-common curl gnupg gpg-agent snapd --no-install-recommends && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
-    add-apt-repository ppa:rpardini/adoptopenjdk && \
+#    add-apt-repository ppa:rpardini/adoptopenjdk && \
+    wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add - && \
+    echo "deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/adoptopenjdk.list && \
     mkdir -p /usr/share/man/man1 && \
-    apt-add-repository ppa:brightbox/ruby-ng && \
-    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu trusty stable" && \
-    echo "deb https://packages.cloud.google.com/apt cloud-sdk-`lsb_release -c -s` main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+#    apt-add-repository ppa:brightbox/ruby-ng && \
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && \
+#    echo "deb https://packages.cloud.google.com/apt cloud-sdk-`lsb_release -c -s` main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    echo "deb https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
     curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
     apt-get update -qq && \
-    DEBIAN_FRONTEND=noninteractive apt-get purge lxc-docker* ruby* && \
-    DEBIAN_FRONTEND=noninteractive apt-cache policy docker-engine && \
+    DEBIAN_FRONTEND=noninteractive apt-get purge docker-ce containerd.io ruby* && \
+    DEBIAN_FRONTEND=noninteractive apt-cache policy docker-ce && \
     DEBIAN_FRONTEND=noninteractive apt-get -y install git mercurial rsync expect python build-essential \
                                               unzip zip tree build-essential zlib1g-dev  \
-                                              libssl-dev libreadline6-dev libyaml-dev ruby2.4 ruby2.4-dev \
-                                              docker-ce adoptopenjdk-8-jdk-hotspot-installer libc6-i386 lib32stdc++6 lib32gcc1 lib32ncurses5 lib32z1 \
-                                              google-cloud-sdk libqt5widgets5 \
-                                              nodejs --no-install-recommends && \
+                                              libssl-dev libreadline6-dev libyaml-dev ruby-full \
+                                              docker-ce docker-ce-cli containerd.io adoptopenjdk-8-hotspot libc6-i386 lib32stdc++6 lib32gcc1 lib32ncurses-dev lib32z1 \
+                                              libqt5widgets5 \
+                                              nodejs yarn git-core libgdbm-dev libncurses5-dev automake libtool bison libffi-dev \
+                                              nodejs --no-install-recommends \
+                                              google-cloud-sdk && \
+    docker --version && \
     ruby --version && \
     gem install rubygems-update && \
     gem install psych && \
     gem update psych && \
     gem install bundler -v '~>1' && \
+    export LC_ALL=en_US.UTF-8 && \
+    export LANG=en_US.UTF-8 && \
     gem install fastlane && \
-    curl -fL https://github.com/docker/compose/releases/download/1.6.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
+    curl -fL https://github.com/docker/compose/releases/download/1.27.4/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose && \
     docker-compose --version && \
     cd /opt && \
